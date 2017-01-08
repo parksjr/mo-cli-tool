@@ -1,0 +1,15 @@
+module.exports = {
+  main: function(args, callback) {
+    var tool = args[0];
+    if(tool == 'sample') {
+      callback('successfull callback');
+    }
+    else {
+      callback(null, 'error message');
+    }
+  },
+  help: [
+    "mtool sample",
+    "mtool sample args"
+  ]
+};
