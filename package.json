@@ -4,7 +4,7 @@
   "description": "A command line multi-tool for developers",
   "preferGlobal": true,
   "bin": {
-    "mtool": "./index.js"
+    "mo": "./index.js"
   },
   "scripts": {
     "test": "npm test"
