@@ -1,25 +1,21 @@
-# node-multitool
+# mo-cli-tool
 
-A command line multi-tool for developers
+A developer's tool for command line (called mo).
 
 ## Running Locally
 
 Make sure you have [Node.js](http://nodejs.org/) installed.
 
 ```sh
-npm install -g node-multitool
-mtool --help
+npm install -g mo-cli-tool
 ```
 
-Now you can run node-multitool commands. Seek help via command line or view the commands below
+Now you can run mo commands. Seek help via command line.
 
 ## Commands
 
 ```sh
 mtool --help  # shows general commands
-mtool --help <command>  # shows help for a specific command
-
-# bcrypt
-mtool bcrypt salt  # generates a random salt
-mtool bcrypt salt [rounds]  # generates a random salt specifying the optional number of rounds to process the data 
+mtool <command> --help   # shows help for a specific command
 ```
+
