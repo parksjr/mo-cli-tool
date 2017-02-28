@@ -1,31 +1,84 @@
-var glob = require('glob');
+#!/usr/bin/env node
+require.all = require('require.all');
 var chalk = require('chalk');
-var args = process.argv.slice(2);
-var tool = args[0];
+var program = require('commander');
+var Datastore = require("nedb");
 
-function callback(msg, err) {
-  if (!err) {
-    console.log(msg);
+// globals
+global.__base = __dirname;
+
+var _scriptsDir = __dirname + '\\scripts';
+
+var controller = {
+  program: program,
+  db: {
+    load: function(name) {
+      controller.db.name = name;
+      var dbPath = controller.db.path + "\\" + name + ".db";
+      controller.db[name] = new Datastore({ filename: dbPath, autoload: true });
+    },
+    name: "",
+    path: global.__base + '\\data',
+    exec: {
+      insert: function(itemKey, value, callback) {
+        if (callback == null) callback = controller.response;
+        var document = { item: itemKey, value: value };
+        var onInserted = function(err, doc) {
+          if (!err) {
+            callback(doc);
+          }
+          else {
+            callback(null, err);
+          }
+        };
+        controller.db[controller.db.name].insert(document, onInserted);
+      },
+      findOne: function(itemKey, callback) {
+        if (callback == null) callback = controller.response;
+        var onFound = function(err, doc) {
+          if (!err) {
+            if (doc != null) {
+              callback(doc);
+            }
+          }
+          else {
+            callback(null, err);
+          }
+        };
+        controller.db[controller.db.name].findOne({ item: itemKey }, onFound);
+      },
+      removeByKey: function(itemKey, callback) {
+        if (callback == null) callback = controller.response;
+        var onRemoved = function(err, count) {
+          if (!err) {
+            callback(count + " documents removed.");
+          }
+          else {
+            callback(null, err);
+          }
+        };
+        controller.db[controller.db.name].remove({ item: itemKey }, { multi: true }, onRemoved);
+      }
+    }
+  },
+  response: function(msg, err) {
+    if (!err) {
+      console.log(msg);
+    }
+    else {
+      console.log(chalk.red(err));
+    }
   }
-  else {
-    console.log(chalk.red(err));
-  }
-}
+};
 
-var helpCmds = [];
+//  require.all scripts in the _scriptsDir directory that follow the naming convention [tool name]-tool.js
+var scripts = require.all({ dir: _scriptsDir, match: /-tool\.js/i })(controller);
 
-var scripts = glob.sync('./scripts/*.js');
-scripts.forEach(function (script) {
-  var module = require(script);
-  module.main(args, callback);
-  helpCmds = helpCmds.concat(module.help);
-  //console.log(module.help);
-});
+program
+  .command("*")
+  .action(function(cmd){
+    //console.log(options);
+    callback(null, 'command not found "' + cmd + '"');
+  });
 
-var tool = args[0];
-var method = args[1];
-if (tool == 'help') {
-  for (i=0;i<helpCmds.length;i++) {
-    console.log(chalk.green(helpCmds[i]));
-  }
-}
+program.parse(process.argv);

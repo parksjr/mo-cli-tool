@@ -1,0 +1,18 @@
+var requirement = require('some-requirement');
+var tool = {
+  init: function(program, callback) {
+    program
+      .command('sample')
+      .description('sample tool for sampling')
+      .option('-s, --sample', 'samples a sample option')
+      .action(function(options) {
+        if (options.sample) {
+          callback('callback sample');
+        }
+        else {
+          callback(null, 'error sample callback');
+        }
+      });
+  }
+};
+module.exports = tool.init;

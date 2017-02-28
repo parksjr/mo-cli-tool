@@ -1,14 +1,19 @@
 {
-  "name": "multitool",
+  "name": "multi-tool-cli",
   "version": "0.1.0",
   "description": "A command line multi-tool for developers",
   "preferGlobal": true,
   "bin": {
-    "mtool": "index.js"
+    "mtool": "./index.js"
   },
   "scripts": {
     "test": "npm test"
   },
+  "files": [
+    "README.md",
+    "index.js",
+    "scripts/bcrypt.js"
+  ],
   "keywords": [
     "multitool",
     "command",
@@ -22,6 +27,10 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "chalk": "^1.1.3",
-    "glob": "^7.1.1"
+    "commander": "^2.9.0",
+    "fs": "0.0.1-security",
+    "glob": "^7.1.1",
+    "nedb": "^1.8.0",
+    "require.all": "^2.0.3"
   }
 }
