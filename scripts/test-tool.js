@@ -12,7 +12,7 @@ var tool = {
           db.exec.insert('test', 'one two.. one two..');
         }
         else {
-          controller.response('on two.. one two..');
+          controller.response('one two.. one two..');
         }
       });
   }
