@@ -78,7 +78,7 @@ program
   .command("*")
   .action(function(cmd){
     //console.log(options);
-    callback(null, 'command not found "' + cmd + '"');
+    controller.response('command not found "' + cmd + '"');
   });
 
 program.parse(process.argv);
