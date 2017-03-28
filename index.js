@@ -61,13 +61,25 @@ var controller = {
       }
     }
   },
-  response: function(msg, err) {
+  response: function(msg, err, color) {
+    var log = function(txt) {
+      if (color in chalk) {
+        console.log(chalk[color](txt));
+      }
+      else {
+        console.log(err ? chalk.red(txt) : txt);
+      }
+    };
     if (!err) {
-      console.log(msg);
+      log(msg);
     }
     else {
-      console.log(chalk.red(err));
+      log(err);
     }
+  },
+  getOptionOrDefault: function(option, defaultValue, defaultType) {
+    defaultType = defaultType || 'string';
+    return typeof option === defaultType ? option : defaultValue;
   }
 };
 

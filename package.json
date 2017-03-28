@@ -1,6 +1,6 @@
 {
   "name": "mo-cli-tool",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A developer's tool for command line (called mo).",
   "preferGlobal": true,
   "bin": {
@@ -12,7 +12,8 @@
   "files": [
     "README.md",
     "index.js",
-    "scripts/"
+    "scripts/",
+    "pgtemplates/"
   ],
   "keywords": [
     "multitool",
@@ -33,6 +34,7 @@
     "fs": "0.0.1-security",
     "glob": "^7.1.1",
     "nedb": "^1.8.0",
+    "postgrator": "^2.8.2",
     "require.all": "^2.0.3"
   }
 }

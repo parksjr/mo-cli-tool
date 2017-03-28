@@ -1,0 +1,12 @@
+-- ================================================
+-- Template generated from the mo-cli-tool for 
+-- postgrator. https://github.com/parksjr/mo-cli-tool
+--
+-- Make the necessary changes to fulfill your needs.
+--
+-- Dont forget to enter the undo sql commands in the 
+-- matching undo file.
+--
+-- This block of comments will not be included in
+-- the definition of the procedure.
+-- ================================================
