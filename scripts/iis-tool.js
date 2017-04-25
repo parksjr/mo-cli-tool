@@ -76,7 +76,7 @@ var tool = {
               return res(null, err);
             }
             var fileName = saveDir + templateName;
-            controller.createTemplateFile(fileName, data, res);
+            controller.createTemplateFile(fileName, data, res, "Web config file");
           };
           controller.getTemplateFile(templateType, templateName, dataCallback);
         }
