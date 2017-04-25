@@ -63,26 +63,13 @@ var postgrator =  {
   },
   getTemplate: function(template, action, callback) {
     action = action == 'undo' ? action : 'do';
-    var templatePath = global.__base + "\\templates\\pgtemplates\\pg." + action + "." + template + ".sql";
-    if (!fs.existsSync(templatePath)) {
-      callback(null, `${template} migration template does not exist. see help for more information.`);
-    }
-    else {
-      fs.readFile(templatePath, {encoding: 'utf-8'}, function(err, data) {
-        if (err) {
-          return callback(null, err);
-        }
-       callback(data, null, action);
-      });
-    }
+    var templateName = "pg."+ action + "." + template + ".sql";
+    var templateType = "pgtemplates";
+    //var templatePath = global.__base + "\\templates\\pgtemplates\\pg." + action + "." + template + ".sql";
+    controller.getTemplateFile(templateType, templateName, callback);
   },
   createMigrationFile: function(fileName, data, callback) {
-    fs.writeFile(fileName, data, function(err) {
-      if (err) {
-        return callback(null, err);
-      }
-      callback(`Migration file created: ${fileName}`);
-    });
+    controller.createTemplateFile(fileName, data, res, "Migration file");
   }
 };
 
