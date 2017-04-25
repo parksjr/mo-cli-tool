@@ -3,6 +3,7 @@ require.all = require('require.all');
 var chalk = require('chalk');
 var program = require('commander');
 var Datastore = require("nedb");
+var fs = require('fs');
 
 // globals
 global.__base = __dirname;
@@ -80,6 +81,29 @@ var controller = {
   getOptionOrDefault: function(option, defaultValue, defaultType) {
     defaultType = defaultType || 'string';
     return typeof option === defaultType ? option : defaultValue;
+  },
+  getTemplateFile: function(template, file, callback) {
+    var templatePath = global.__base + "\\templates\\" + template + "\\" + file;
+    if (!fs.existsSync(templatePath)) {
+      callback(null, `${templatePath} template does not exist. see help for more information.`);
+    }
+    else {
+      fs.readFile(templatePath, {encoding: 'utf-8'}, function(err, data) {
+        if (err) {
+          return callback(null, err);
+        }
+       callback(data, null);
+      });
+    }
+  },
+  createTemplateFile: function(fileName, data, callback, templateType) {
+    templateType = templateType ? templateType : 'Template file';
+    fs.writeFile(fileName, data, function(err) {
+      if (err) {
+        return callback(null, err);
+      }
+      callback(`${templateType} created: ${fileName}`);
+    });
   }
 };
 

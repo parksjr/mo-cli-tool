@@ -63,7 +63,7 @@ var postgrator =  {
   },
   getTemplate: function(template, action, callback) {
     action = action == 'undo' ? action : 'do';
-    var templatePath = global.__base + "\\pgtemplates\\pg." + action + "." + template + ".sql";
+    var templatePath = global.__base + "\\templates\\pgtemplates\\pg." + action + "." + template + ".sql";
     if (!fs.existsSync(templatePath)) {
       callback(null, `${template} migration template does not exist. see help for more information.`);
     }

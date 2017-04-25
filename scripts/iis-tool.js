@@ -39,6 +39,7 @@ var tool = {
       .option('-l, --list_sites [optional name]', 'List of available IIS site(s)')
       .option('-a, --app_pools [optional name]', 'List of IIS application pools')
       .option('-r, --recycle_app_pool [required name]', 'Recycle a given application pool by name')
+      .option('-w, --generate_web_config [optional type]', 'Generates a new web.config file in current dir, types: blank, 35, 45, iisnode')
       .description('Run some IIS commands in one place')
       .action(function(options) {
         var res = controller.response;
@@ -62,6 +63,22 @@ var tool = {
         }
         else if (options.recycle_app_pool) {
           res(null, 'APPCMD ERROR: Please supply an application pool name');
+        }
+        //  generate web.config file
+        if (options.generate_web_config || typeof options.generate_web_config === 'string') {
+          var defaultType = "blank";
+          defaultType = controller.getOptionOrDefault(options.generate_web_config, defaultType);
+          var templateName = "web."+ defaultType + ".config";
+          var templateType = "webconfigTemplates";
+          var saveDir = process.cwd() + "\\";
+          var dataCallback = function(data, err) {
+            if (err) {
+              return res(null, err);
+            }
+            var fileName = saveDir + templateName;
+            controller.createTemplateFile(fileName, data, res);
+          };
+          controller.getTemplateFile(templateType, templateName, dataCallback);
         }
       });
   }
