@@ -61,15 +61,14 @@ var postgrator =  {
     n = n + '';
     return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
   },
-  getTemplate: function(template, action, callback) {
+  getTemplate: function(template, action, controllerCallback, callback) {
     action = action == 'undo' ? action : 'do';
     var templateName = "pg."+ action + "." + template + ".sql";
     var templateType = "pgtemplates";
     //var templatePath = global.__base + "\\templates\\pgtemplates\\pg." + action + "." + template + ".sql";
-    controller.getTemplateFile(templateType, templateName, callback);
-  },
-  createMigrationFile: function(fileName, data, callback) {
-    controller.createTemplateFile(fileName, data, res, "Migration file");
+    controllerCallback(templateType, templateName, function(data, err) {
+      callback(data, err, action);
+    });
   }
 };
 
@@ -122,10 +121,10 @@ var tool = {
                 return res(null, err);
               }
               var fileName = migrationDir + '\\' + postgrator.padVersion(curVersion) + '.' + action + '.' + description + '.sql';
-              postgrator.createMigrationFile(fileName, data, res);
+              controller.createTemplateFile(fileName, data, res, "Migration file");
             };
-            var doData = postgrator.getTemplate(template, 'do', dataCallback);
-            var undoData = postgrator.getTemplate(template, 'undo', dataCallback);
+            var doData = postgrator.getTemplate(template, 'do', controller.getTemplateFile, dataCallback);
+            var undoData = postgrator.getTemplate(template, 'undo', controller.getTemplateFile, dataCallback);
           }
           return;
         }
