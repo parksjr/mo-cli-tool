@@ -1,6 +1,6 @@
 {
   "name": "mo-cli-tool",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "A developer's tool for command line (called mo).",
   "preferGlobal": true,
   "bin": {
