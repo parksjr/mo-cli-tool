@@ -2,28 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var request = require('request');
 var cheerio = require('cheerio');
-
-function fromDir(startPath,filter,callback){
-
-  //console.log('Starting from dir '+startPath+'/');
-  var results = [];
-
-  if (!fs.existsSync(startPath)){
-      console.log("no dir ",startPath);
-      return;
-  }
-
-  var files=fs.readdirSync(startPath);
-  for(var i=0;i<files.length;i++){
-      var filename=path.join(startPath,files[i]);
-      var stat = fs.lstatSync(filename);
-      if (stat.isDirectory()){
-          results = results.concat(fromDir(filename,filter,callback)); //recurse
-      }
-      else if (filter.test(filename)) results.push(filename);
-  };
-  return results;
-};
+var Zip = require('node-7z');
 
 var tool = {
   init: function(controller) {
@@ -65,6 +44,23 @@ var tool = {
           }
           request(options, callback);
         }
+
+        //todo:  rename file to match video file
+        //todo: add chinese language code (zh_CN) to file name
+        function unzipFile(file) {
+          var myTask = new Zip();
+          var destination = file.substr(0, file.lastIndexOf('\\'));
+          myTask.extract(file, destination, {})
+            .progress(function(files) {
+              console.log('Some files are extracted: %s', files)
+            })
+            .then(function() {
+              res('Extracting done!', null, 'green');
+            })
+            .catch(function(err) {
+              res(null, err, 'red');
+            });
+        }
         function downloadCallback(error, response, body) {
           if (error) {
             return res(null, error);
@@ -72,13 +68,15 @@ var tool = {
           var o = JSON.parse(body);
           if (o.success) {
             var fileNameAndPath = workingDir + '\\' + options.title + '-' + o.url.substr(o.url.lastIndexOf('/')+1);
-            request.get(o.url)
+            var fileExt = o.url.substr(o.url.lastIndexOf('.')+1);
+            return request.get(o.url)
               .on('response', function(resp) {
                 //var filename = regexp.exec(resp.headers['content-disposition'])[1];
                 var fws = fs.createWriteStream(fileNameAndPath);
                 resp.pipe(fws);
                 resp.on('end', function() {
                   res(o.url + ' =====> ' + fileNameAndPath, null, 'green');
+                  return unzipFile(fileNameAndPath);
                 });
               });
           }
