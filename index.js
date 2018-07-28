@@ -4,22 +4,23 @@ var chalk = require('chalk');
 var program = require('commander');
 var Datastore = require("nedb");
 var fs = require('fs');
+var path = require('path');
 
 // globals
 global.__base = __dirname;
 
-var _scriptsDir = __dirname + '\\scripts';
+var _scriptsDir = path.join(__dirname, './scripts');
 
 var controller = {
   program: program,
   db: {
     load: function(name) {
       controller.db.name = name;
-      var dbPath = controller.db.path + "\\" + name + ".db";
+      var dbPath = path.join(controller.db.path, name + ".db");
       controller.db[name] = new Datastore({ filename: dbPath, autoload: true });
     },
     name: "",
-    path: global.__base + '\\data',
+    path: path.join(global.__base, 'data'),
     exec: {
       insert: function(itemKey, value, callback) {
         if (callback == null) callback = controller.response;
@@ -83,7 +84,7 @@ var controller = {
     return typeof option === defaultType ? option : defaultValue;
   },
   getTemplateFile: function(template, file, callback) {
-    var templatePath = global.__base + "\\templates\\" + template + "\\" + file;
+    var templatePath = path.join(global.__base, "templates/" + template + "/" + file);
     if (!fs.existsSync(templatePath)) {
       callback(null, `${templatePath} template does not exist. see help for more information.`);
     }
