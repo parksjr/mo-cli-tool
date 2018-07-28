@@ -49,7 +49,7 @@ var tool = {
         //todo: add chinese language code (zh_CN) to file name
         function unzipFile(file) {
           var myTask = new Zip();
-          var destination = file.substr(0, file.lastIndexOf('\\'));
+          var destination = path.dirname(file);
           myTask.extract(file, destination, {})
             .progress(function(files) {
               console.log('Some files are extracted: %s', files)
@@ -67,7 +67,8 @@ var tool = {
           }
           var o = JSON.parse(body);
           if (o.success) {
-            var fileNameAndPath = workingDir + '\\' + options.title + '-' + o.url.substr(o.url.lastIndexOf('/')+1);
+            var fileNameAndPath = path.join(workingDir, options.title + '-' + o.url.substr(o.url.lastIndexOf('/')+1));
+            console.log('test', fileNameAndPath);
             var fileExt = o.url.substr(o.url.lastIndexOf('.')+1);
             return request.get(o.url)
               .on('response', function(resp) {
